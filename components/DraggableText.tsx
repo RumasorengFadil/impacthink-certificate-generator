@@ -6,10 +6,10 @@ interface DraggableTextProps {
   element: TextElement;
   content: string;
   onDrag: (x: number, y: number) => void;
-  zoom:number
+  scale: number;
 }
 
-export function DraggableText({ element, content, onDrag, zoom }: DraggableTextProps) {
+export function DraggableText({ element, content, onDrag, scale }: DraggableTextProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const textRef = useRef<HTMLDivElement>(null);
@@ -120,9 +120,9 @@ export function DraggableText({ element, content, onDrag, zoom }: DraggableTextP
       className={`absolute cursor-move group transition-all ${isDragging ? 'opacity-80 z-50' : 'hover:ring-2 hover:ring-blue-500 hover:ring-offset-2'
         }`}
       style={{
-        left: `${calculatedX * zoom}px`,
-        top: `${element.y * zoom}px`,
-        fontSize: `${element.fontSize}px`,
+        left: `${calculatedX * scale}px`,
+        top: `${element.y * scale}px`,
+        fontSize: `${element.fontSize * scale}px`,
         fontFamily: getFontFamily(element.fontFamily),
         color: element.color,
         userSelect: 'none',

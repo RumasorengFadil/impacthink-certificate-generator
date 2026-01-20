@@ -28,6 +28,7 @@ export default function Canvas({
   const [numPages, setNumPages] = useState<number | null>(null);
   const [pageWidth, setPageWidth] = useState<number>(800);
   const [zoom, setZoom] = useState<number>(100);
+  const baseWidth = 800; // Base width for coordinate system
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
@@ -40,10 +41,12 @@ export default function Canvas({
 
   // Update page width based on zoom
   useEffect(() => {
-    const baseWidth = 800;
     setPageWidth((baseWidth * zoom) / 100);
   }, [zoom]);
 
+  // Calculate scale factor for text elements
+  const scale = pageWidth / baseWidth;
+  
   const handleZoomIn = () => {
     setZoom((prev) => Math.min(prev + 10, 150));
   };
@@ -69,6 +72,13 @@ export default function Canvas({
     }
   };
 
+  // Handle drag updates - convert from display coordinates to base coordinates
+  const handleTextDrag = (id: string, displayX: number, displayY: number) => {
+    const baseX = displayX / scale;
+    const baseY = displayY / scale;
+    updateTextElement(id, { x: baseX, y: baseY });
+  };
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-gray-100">
       {/* Header */}
@@ -76,7 +86,7 @@ export default function Canvas({
         <div>
           <h2 className="text-xl font-semibold text-gray-800">Certificate Preview</h2>
           <p className="text-sm text-gray-500 mt-1">
-            Drag text elements to position them on the certificate
+            Drag text elements to position them on the certificate. Use zoom controls to adjust view.
           </p>
         </div>
         {pdfDataUrl && (
@@ -86,6 +96,7 @@ export default function Canvas({
               size="sm"
               onClick={handleZoomOut}
               disabled={zoom <= 50}
+              className="hover:bg-blue-50 hover:border-blue-300"
             >
               <ZoomOut className="w-4 h-4" />
             </Button>
@@ -93,6 +104,7 @@ export default function Canvas({
               variant="outline"
               size="sm"
               onClick={handleResetZoom}
+              className="hover:bg-blue-50 hover:border-blue-300"
             >
               <Maximize2 className="w-4 h-4 mr-1" />
               {zoom}%
@@ -102,6 +114,7 @@ export default function Canvas({
               size="sm"
               onClick={handleZoomIn}
               disabled={zoom >= 150}
+              className="hover:bg-blue-50 hover:border-blue-300"
             >
               <ZoomIn className="w-4 h-4" />
             </Button>
@@ -133,8 +146,8 @@ export default function Canvas({
                   key={element.id}
                   element={element}
                   content={getTextContent(element)}
-                  onDrag={(x, y) => updateTextElement(element.id, { x, y })}
-                   zoom={zoom / 100}
+                  onDrag={(x, y) => handleTextDrag(element.id, x, y)}
+                  scale={scale}
                 />
               ))}
             </div>
