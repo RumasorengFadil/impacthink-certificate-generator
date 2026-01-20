@@ -6,8 +6,9 @@ export interface TextElement {
   fontSize: number;
   fontFamily: string;
   color: string;
-  align?: 'left' | 'center' | 'right';
+  textAlign?: 'left' | 'center' | 'right';
   fontWeight?: 'bold' | 'normal' | 'lighter'
+  width: number
 }
 
 export interface CertificateData {

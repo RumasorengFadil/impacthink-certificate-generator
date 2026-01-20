@@ -1,6 +1,6 @@
-import { useRef, useState, useEffect, useLayoutEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Move } from 'lucide-react';
-import { CalculateAlignedXParams, TextElement } from '@/types';
+import { TextElement } from '@/types';
 
 interface DraggableTextProps {
   element: TextElement;
@@ -10,45 +10,24 @@ interface DraggableTextProps {
 }
 
 export function DraggableText({ element, content, onDrag, scale }: DraggableTextProps) {
+  console.log(element);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const textRef = useRef<HTMLDivElement>(null);
-  const [textWidth, setTextWidth] = useState(0);
-
-  useLayoutEffect(() => {
-    if (textRef.current) {
-      setTextWidth(textRef.current.offsetWidth);
-    }
-  }, [content, element.fontSize, element.fontFamily, element.fontWeight]);
-
 
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsDragging(true);
-
-    const parent = textRef.current?.offsetParent as HTMLElement;
-    if (!parent) return;
-
-    const parentRect = parent.getBoundingClientRect();
-
-    const alignOffset = getAlignOffset();
-
-    setDragOffset({
-      x: e.clientX - parentRect.left - element.x + alignOffset,
-      y: e.clientY - parentRect.top - element.y,
-    });
+    
+    const rect = textRef.current?.getBoundingClientRect();
+    if (rect) {
+      setDragOffset({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      });
+    }
   };
 
-  const getAlignOffset = () => {
-    const el = textRef.current;
-    if (!el) return 0;
-
-    const width = el.offsetWidth;
-
-    if (element.align === 'center') return width / 2;
-    if (element.align === 'right') return width;
-    return 0;
-  };
   const handleMouseMove = (e: MouseEvent) => {
     if (!isDragging) return;
 
@@ -77,56 +56,30 @@ export function DraggableText({ element, content, onDrag, scale }: DraggableText
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDragging, dragOffset]);
 
-  const getFontFamily = (fontFamily: string) => {
-    if (fontFamily.toLowerCase() === "poppins") {
-      return 'var(--font-poppins)';
-    }
-    if (fontFamily.toLowerCase() === "montserrat") {
-      return 'var(--font-montserrat)';
-    }
-
-    return fontFamily;
-  }
-
-  function calculateAlignedX({
-    x,
-    width,
-    align,
-  }: CalculateAlignedXParams): number {
-    switch (align) {
-      case 'center':
-        return x - width / 2;
-
-      case 'right':
-        return x - width;
-
-      case 'left':
-      default:
-        return x;
-    }
-  }
-
-  const calculatedX = calculateAlignedX({
-    x: element.x,
-    width: textWidth,
-    align: element.align,
-  });
+  // Calculate scaled position and font size
+  const displayX = element.x * scale;
+  const displayY = element.y * scale;
+  const displayFontSize = element.fontSize * scale;
+  const displayWidth = element.width * scale;
 
   return (
     <div
       ref={textRef}
-      className={`absolute cursor-move group transition-all ${isDragging ? 'opacity-80 z-50' : 'hover:ring-2 hover:ring-blue-500 hover:ring-offset-2'
-        }`}
+      className={`absolute cursor-move group transition-all ${
+        isDragging ? 'opacity-80 z-50' : 'hover:ring-2 hover:ring-blue-500 hover:ring-offset-2'
+      }`}
       style={{
-        left: `${calculatedX * scale}px`,
-        top: `${element.y * scale}px`,
-        fontSize: `${element.fontSize * scale}px`,
-        fontFamily: getFontFamily(element.fontFamily),
+        left: `${displayX}px`,
+        top: `${displayY}px`,
+        fontSize: `${displayFontSize}px`,
+        fontFamily: element.fontFamily,
         color: element.color,
+        textAlign: element.textAlign,
         userSelect: 'none',
-        fontWeight: element.fontWeight,
+        width: `${displayWidth}px`,
       }}
       onMouseDown={handleMouseDown}
     >
@@ -139,18 +92,34 @@ export function DraggableText({ element, content, onDrag, scale }: DraggableText
 
       {/* Text Content */}
       <div
-        className={`px-2 py-1 rounded text-nowrap ${isDragging ? 'bg-blue-100 bg-opacity-50' : ''
-          }`}
+        className={`px-2 py-1 rounded relative ${
+          isDragging ? 'bg-blue-100 bg-opacity-50' : ''
+        }`}
       >
         {content || 'Empty'}
+        
+        {/* Alignment indicator line (shown on hover) */}
+        {!isDragging && (
+          <div className="absolute opacity-0 group-hover:opacity-30 pointer-events-none transition-opacity" 
+            style={{
+              top: 0,
+              bottom: 0,
+              width: '1px',
+              backgroundColor: '#2563eb',
+              left: element.textAlign === 'left' ? '0' : 
+                    element.textAlign === 'center' ? '50%' : 
+                    element.textAlign === 'right' ? '100%' : '0',
+            }}
+          />
+        )}
       </div>
 
       {/* Label */}
       <div className="absolute -top-6 left-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
         <div className="bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap shadow-lg">
-          {element.type === 'certNumber' ? 'Certificate Number' :
-            element.type === 'issueDate' ? 'Issue Date' :
-              'Recipient Name'}
+          {element.type === 'certNumber' ? 'Certificate Number' : 
+           element.type === 'issueDate' ? 'Issue Date' : 
+           'Recipient Name'}
         </div>
       </div>
     </div>

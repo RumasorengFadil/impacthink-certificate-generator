@@ -1,5 +1,5 @@
 "use client"
-import { Upload, Download, FileText, Settings } from 'lucide-react';
+import { Upload, Download, FileText, Settings, AlignLeft, AlignCenter, AlignRight } from 'lucide-react';
 
 import { useState } from 'react';
 import { CertificateData, TextElement } from '@/types';
@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Button } from './ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { bulkDownloadCertificates, downloadCertificate } from '@/utils/certificate-generator';
+import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
 
 interface SidebarProps {
   certificateData: CertificateData;
@@ -75,13 +76,13 @@ export function Sidebar({
     }
   };
 
-  const fontFamilies = ['Arial', 'Times New Roman', 'Courier New', 'Georgia', 'Verdana', 'Montserrat', 'Poppins'];
+  const fontFamilies = ['Arial', 'Times New Roman', 'Courier New', 'Georgia', 'Verdana'];
 
   return (
-    <div className="w-full md:w-96 bg-white border-r border-gray-200 flex flex-col overflow-hidden">
+    <div className="w-96 bg-white border-r border-gray-200 flex flex-col overflow-hidden">
       {/* Header */}
       <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-blue-700">
-        <h1 className="text-2xl text-white">Impacthink</h1>
+        <h1 className="text-2xl text-white font-bold">Impacthink</h1>
         <p className="text-sm text-blue-100 mt-1">Certificate Generator</p>
       </div>
 
@@ -220,8 +221,8 @@ export function Sidebar({
                   </Label>
                 </div>
                 <Separator />
-                <div className="flex gap-3">
-                  <div className="space-y-2 w-full">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
                     <Label htmlFor={`${element.id}-font`} className="text-xs">
                       Font
                     </Label>
@@ -231,10 +232,10 @@ export function Sidebar({
                         updateTextElement(element.id, { fontFamily: value })
                       }
                     >
-                      <SelectTrigger className='w-full' id={`${element.id}-font`}>
+                      <SelectTrigger id={`${element.id}-font`}>
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className='w-full'>
+                      <SelectContent>
                         {fontFamilies.map((font) => (
                           <SelectItem key={font} value={font}>
                             {font}
@@ -243,7 +244,7 @@ export function Sidebar({
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="space-y-2 w-full">
+                  <div className="space-y-2">
                     <Label htmlFor={`${element.id}-size`} className="text-xs">
                       Size
                     </Label>
@@ -284,6 +285,43 @@ export function Sidebar({
                       className="flex-1"
                     />
                   </div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs">Alignment</Label>
+                  <ToggleGroup
+                    type="single"
+                    value={element.textAlign}
+                    onValueChange={(value) => {
+                      if (value) {
+                        updateTextElement(element.id, { textAlign: value as 'left' | 'center' | 'right' });
+                      }
+                    }}
+                    className="justify-start"
+                  >
+                    <ToggleGroupItem value="left" aria-label="Align left" className="w-10">
+                      <AlignLeft className="w-4 h-4" />
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="center" aria-label="Align center" className="w-10">
+                      <AlignCenter className="w-4 h-4" />
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="right" aria-label="Align right" className="w-10">
+                      <AlignRight className="w-4 h-4" />
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label className="text-xs">Width (px)</Label>
+                  <Input
+                    type="number"
+                    value={element.width}
+                    onChange={(e) =>
+                      updateTextElement(element.id, { width: parseInt(e.target.value) || 200 })
+                    }
+                    min={50}
+                    max={1000}
+                    className="h-8"
+                  />
                 </div>
               </div>
             ))}

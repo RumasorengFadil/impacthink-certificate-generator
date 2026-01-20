@@ -2,7 +2,6 @@
 import { Sidebar } from "@/components/Sidebar";
 import { CertificateData, TextElement } from "@/types";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 
@@ -13,46 +12,49 @@ const Canvas = dynamic(
 
 export default function Home() {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
-  const [pdfDataUrl, setPdfDataUrl] = useState<string | null>(null);
+  const [pdfDataUrl, setPdfDataUrl] = useState<string>("");
   const [canvasWidth, setCanvasWidth] = useState<number>(800);
   const [certificateData, setCertificateData] = useState<CertificateData>({
     recipientName: '',
     certificateNumber: 'NO: 13.024/IMPCT/V/2025',
-    issueDate: "Jakarta, " + new Date().toLocaleDateString('id-ID'),
+    issueDate: new Date().toLocaleDateString('id-ID'),
   });
   const [bulkRecipients, setBulkRecipients] = useState<string>('');
   const [textElements, setTextElements] = useState<TextElement[]>([
     {
       id: 'name',
       type: 'name',
-      x: 400,
+      x: 0,
       y: 274,
       fontSize: 55,
       fontFamily: 'Poppins',
       color: '#02316a',
-      align: 'center',
+      textAlign: 'center',
       fontWeight: 'bold',
+      width: 800,
     },
     {
       id: 'certNumber',
       type: 'certNumber',
-      x: 408,
+      x: 230,
       y: 215,
       fontSize: 22,
       fontFamily: 'Montserrat',
       color: '#02316a',
-      align: 'center',
+      textAlign: 'center',
+      width: 350,
     },
     {
       id: 'issueDate',
       type: 'issueDate',
-      x: 397,
+      x: 296,
       y: 431,
       fontSize: 13,
       fontFamily: 'Montserrat',
       color: '#02316a',
-      align: 'center',
-      fontWeight: "bold"
+      textAlign: 'center',
+      fontWeight: "bold",
+      width: 200,
     },
   ]);
 
@@ -74,6 +76,7 @@ export default function Home() {
     );
   };
 
+  
   useEffect(() => {
     async function loadLocalPdf() {
       const url = "/files/CERTIFIED IMPACTHINK X PELINDO MEI.pdf";
