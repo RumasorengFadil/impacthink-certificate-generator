@@ -76,7 +76,7 @@ export function Sidebar({
     }
   };
 
-  const fontFamilies = ['Arial', 'Times New Roman', 'Courier New', 'Georgia', 'Verdana'];
+  const fontFamilies = ['Arial', 'Times New Roman', 'Courier New', 'Georgia', 'Verdana', 'Montserrat', 'Poppins'];
 
   return (
     <div className="w-96 bg-white border-r border-gray-200 flex flex-col overflow-hidden">

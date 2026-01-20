@@ -10,7 +10,6 @@ interface DraggableTextProps {
 }
 
 export function DraggableText({ element, content, onDrag, scale }: DraggableTextProps) {
-  console.log(element);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const textRef = useRef<HTMLDivElement>(null);
