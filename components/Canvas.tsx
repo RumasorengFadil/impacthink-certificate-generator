@@ -36,8 +36,9 @@ export default function Canvas({
 
   // Update parent component when page width changes
   useEffect(() => {
-    onCanvasWidthChange(pageWidth);
-  }, [pageWidth, onCanvasWidthChange]);
+    // Always pass the base width for PDF generation, not the zoomed width
+    onCanvasWidthChange(baseWidth);
+  }, [onCanvasWidthChange]);
 
   // Update page width based on zoom
   useEffect(() => {

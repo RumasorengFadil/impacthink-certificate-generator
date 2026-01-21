@@ -2,7 +2,7 @@
 import { Upload, Download, FileText, Settings, AlignLeft, AlignCenter, AlignRight } from 'lucide-react';
 
 import { useState } from 'react';
-import { CertificateData, TextElement } from '@/types';
+import { CertificateData, FontWeight, TextElement } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Label } from '@radix-ui/react-label';
 import { Input } from './ui/input';
@@ -76,8 +76,7 @@ export function Sidebar({
     }
   };
 
-  const fontFamilies = ['Arial', 'Times New Roman', 'Courier New', 'Georgia', 'Verdana', 'Montserrat', 'Poppins'];
-
+   const fontFamilies = ['Arial', 'Times New Roman', 'Courier New', 'Georgia', 'Verdana', 'Montserrat', 'Poppins'];
   return (
     <div className="w-96 bg-white border-r border-gray-200 flex flex-col overflow-hidden">
       {/* Header */}
@@ -223,16 +222,12 @@ export function Sidebar({
                 <Separator />
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-2">
-                    <Label htmlFor={`${element.id}-font`} className="text-xs">
-                      Font
-                    </Label>
+                    <Label className="text-xs">Font Family</Label>
                     <Select
                       value={element.fontFamily}
-                      onValueChange={(value) =>
-                        updateTextElement(element.id, { fontFamily: value })
-                      }
+                      onValueChange={(value) => updateTextElement(element.id, { fontFamily: value })}
                     >
-                      <SelectTrigger id={`${element.id}-font`}>
+                      <SelectTrigger className="h-8">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -244,23 +239,39 @@ export function Sidebar({
                       </SelectContent>
                     </Select>
                   </div>
+                  
                   <div className="space-y-2">
-                    <Label htmlFor={`${element.id}-size`} className="text-xs">
-                      Size
-                    </Label>
-                    <Input
-                      id={`${element.id}-size`}
-                      type="number"
-                      value={element.fontSize}
-                      onChange={(e) =>
-                        updateTextElement(element.id, {
-                          fontSize: parseInt(e.target.value) || 16,
-                        })
-                      }
-                      min="8"
-                      max="120"
-                    />
+                    <Label className="text-xs">Font Weight</Label>
+                    <Select
+                      value={element.fontWeight}
+                      onValueChange={(value:FontWeight) => updateTextElement(element.id, { fontWeight: value})}
+                    >
+                      <SelectTrigger className="h-8">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={FontWeight.NORMAL}>Normal</SelectItem>
+                        <SelectItem value={FontWeight.BOLD}>Bold</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor={`${element.id}-size`} className="text-xs">
+                    Size
+                  </Label>
+                  <Input
+                    id={`${element.id}-size`}
+                    type="number"
+                    value={element.fontSize}
+                    onChange={(e) =>
+                      updateTextElement(element.id, {
+                        fontSize: parseInt(e.target.value) || 16,
+                      })
+                    }
+                    min="8"
+                    max="120"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor={`${element.id}-color`} className="text-xs">

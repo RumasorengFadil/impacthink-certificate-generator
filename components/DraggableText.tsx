@@ -13,7 +13,7 @@ export function DraggableText({ element, content, onDrag, scale }: DraggableText
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const textRef = useRef<HTMLDivElement>(null);
-console.log(element)
+
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsDragging(true);
