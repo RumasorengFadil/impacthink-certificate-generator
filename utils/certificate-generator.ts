@@ -90,6 +90,9 @@ export async function generateCertificate(
   for (const element of textElements) {
     let text = "";
     switch (element.type) {
+      case "title":
+        text = certificateData.title || "";
+        break;
       case "name":
         text = certificateData.recipientName || "";
         break;

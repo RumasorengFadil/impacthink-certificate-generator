@@ -62,6 +62,8 @@ export default function Canvas({
 
   const getTextContent = (element: TextElement): string => {
     switch (element.type) {
+      case 'title':
+        return certificateData.title || 'Certificate Title';
       case 'name':
         return certificateData.recipientName || 'Recipient Name';
       case 'certNumber':

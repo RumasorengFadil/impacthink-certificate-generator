@@ -1,6 +1,6 @@
 export interface TextElement {
   id: string;
-  type: "name" | "certNumber" | "issueDate";
+  type: "name" | "certNumber" | "issueDate" | "title";
   x: number;
   y: number;
   fontSize: number;
@@ -12,6 +12,7 @@ export interface TextElement {
 }
 
 export interface CertificateData {
+  title: string,
   recipientName: string;
   certificateNumber: string;
   issueDate: string;

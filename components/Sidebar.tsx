@@ -76,7 +76,7 @@ export function Sidebar({
     }
   };
 
-   const fontFamilies = ['Arial', 'Times New Roman', 'Courier New', 'Georgia', 'Verdana', 'Montserrat', 'Poppins'];
+  const fontFamilies = ['Arial', 'Times New Roman', 'Courier New', 'Georgia', 'Verdana', 'Montserrat', 'Poppins'];
   return (
     <div className="w-96 bg-white border-r border-gray-200 flex flex-col overflow-hidden">
       {/* Header */}
@@ -140,6 +140,21 @@ export function Sidebar({
                 <TabsTrigger value="bulk">Bulk</TabsTrigger>
               </TabsList>
               <TabsContent value="single" className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="issue-date">Title</Label>
+                  <Input
+                    id="title"
+                    type="text"
+                    placeholder="Enter certficate title"
+                    value={certificateData.title}
+                    onChange={(e) =>
+                      setCertificateData({
+                        ...certificateData,
+                        title: e.target.value,
+                      })
+                    }
+                  />
+                </div>
                 <div className="space-y-2">
                   <Label htmlFor="recipient-name">Recipient Name</Label>
                   <Input
@@ -239,12 +254,12 @@ export function Sidebar({
                       </SelectContent>
                     </Select>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label className="text-xs">Font Weight</Label>
                     <Select
                       value={element.fontWeight}
-                      onValueChange={(value:FontWeight) => updateTextElement(element.id, { fontWeight: value})}
+                      onValueChange={(value: FontWeight) => updateTextElement(element.id, { fontWeight: value })}
                     >
                       <SelectTrigger className="h-8">
                         <SelectValue />
@@ -320,7 +335,7 @@ export function Sidebar({
                     </ToggleGroupItem>
                   </ToggleGroup>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label className="text-xs">Width (px)</Label>
                   <Input

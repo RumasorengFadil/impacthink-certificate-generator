@@ -8,7 +8,7 @@ import { Toaster } from "sonner";
 
 const Canvas = dynamic(
   () => import("@/components/Canvas"),
-  { ssr: false } // ⬅️ INI KUNCI UTAMA
+  { ssr: false }
 );
 
 export default function Home() {
@@ -16,12 +16,25 @@ export default function Home() {
   const [pdfDataUrl, setPdfDataUrl] = useState<string>("");
   const [canvasWidth, setCanvasWidth] = useState<number>(800);
   const [certificateData, setCertificateData] = useState<CertificateData>({
+    title: '',
     recipientName: '',
     certificateNumber: 'NO: 13.024/IMPCT/V/2025',
     issueDate: formatDateToEnglish(new Date()),
   });
   const [bulkRecipients, setBulkRecipients] = useState<string>('');
   const [textElements, setTextElements] = useState<TextElement[]>([
+    {
+      id: 'title',
+      type: 'title',
+      x: 0,
+      y: 384,
+      fontSize: 14,
+      fontFamily: 'Montserrat',
+      color: '#02316a',
+      textAlign: 'center',
+      fontWeight: FontWeight.BOLD,
+      width: 800,
+    },
     {
       id: 'name',
       type: 'name',
